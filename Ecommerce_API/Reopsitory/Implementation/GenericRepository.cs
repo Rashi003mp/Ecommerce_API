@@ -1,8 +1,9 @@
 ﻿using Ecommerce_API.Data;
 using Ecommerce_API.Models;
+using Ecommerce_API.Reopsitory.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace Ecommerce_API.Reopsitory
+namespace Ecommerce_API.Reopsitory.Implementation
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     {

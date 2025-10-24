@@ -1,7 +1,7 @@
 ﻿using Ecommerce_API.Data;
 using Ecommerce_API.DTOs.AuthDTO;
 using Ecommerce_API.Models;
-using Ecommerce_API.Reopsitory;
+using Ecommerce_API.Reopsitory.Interfaces;
 using Ecommerce_API.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

@@ -1,5 +1,6 @@
 using Ecommerce_API.Data;
-using Ecommerce_API.Reopsitory;
+using Ecommerce_API.Reopsitory.Implementation;
+using Ecommerce_API.Reopsitory.Interfaces;
 using Ecommerce_API.Services.Implementation;
 using Ecommerce_API.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+//CloudinaryDI
+builder.Services.AddSingleton<CloudinaryService>();
+
 
 
 

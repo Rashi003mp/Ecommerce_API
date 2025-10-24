@@ -1,6 +1,6 @@
 ﻿using Ecommerce_API.Models;
 
-namespace Ecommerce_API.Reopsitory
+namespace Ecommerce_API.Reopsitory.Interfaces
 {
     public interface IGenericRepository<T> where T : BaseEntity
     {
