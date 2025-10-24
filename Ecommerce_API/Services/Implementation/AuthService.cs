@@ -1,107 +1,117 @@
 ﻿using Ecommerce_API.Data;
 using Ecommerce_API.DTOs.AuthDTO;
 using Ecommerce_API.Models;
+using Ecommerce_API.Reopsitory;
 using Ecommerce_API.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Ecommerce_API.Services.Implementation
 {
     public class AuthService : IAuthService
     {
-        private readonly AppDbContext _context;
+        private readonly IGenericRepository<User> _userRepo;
         private readonly IConfiguration _configuration;
 
-        public AuthService(AppDbContext context, IConfiguration configuration)
+        public AuthService(IGenericRepository<User> userRepo, IConfiguration configuration)
         {
-            _context = context;
+            _userRepo = userRepo;
             _configuration = configuration;
         }
 
         public async Task<AuthResponseDto> RegisterAsync(RegisterDto registerDto)
         {
-            // Check if email already exists
-            if (await _context.Users.AnyAsync(u => u.Email == registerDto.Email))
+            try
             {
-                return new AuthResponseDto(400, "Email already registered");
+                if (registerDto == null)
+                    throw new ArgumentNullException(nameof(registerDto), "Register request cannot be null");
+
+                // Normalize input
+                registerDto.Email = registerDto.Email.Trim().ToLower();
+                registerDto.Name = registerDto.Name.Trim();
+                registerDto.Password = registerDto.Password.Trim();
+
+                // Check if user already exists
+                var existingUser = (await _userRepo.GetAllAsync())
+                    .FirstOrDefault(u => u.Email == registerDto.Email);
+
+                if (existingUser != null)
+                    return new AuthResponseDto(409, "Email already registered");
+
+                // Hash password
+                string passwordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.Password);
+
+                // Create user entity
+                var newUser = new User
+                {
+                    Name = registerDto.Name,
+                    Email = registerDto.Email,
+                    PasswordHash = passwordHash,
+                    Role = Roles.user,          // default role
+                    CreatedOn = DateTime.UtcNow,
+                    CreatedBy = "system"
+                };
+
+                // Save user via repository
+                await _userRepo.AddAsync(newUser);
+
+                return new AuthResponseDto(201, "User registered successfully");
             }
-
-            // Hash the password
-            string passwordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.Password);
-
-            // Create user entity
-            var user = new User
+            catch (Exception ex)
             {
-                Name = registerDto.Name,
-                Email = registerDto.Email,
-                PasswordHash = passwordHash,
-                Role = Roles.admin,
-                CreatedOn = DateTime.UtcNow,
-                CreatedBy = "system"
-            };
-
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
-            return new AuthResponseDto(201, "User registered successfully");
+                return new AuthResponseDto(500, $"Error registering user: {ex.Message}");
+            }
         }
 
         public async Task<AuthResponseDto> LoginAsync(LoginDTO loginDto)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == loginDto.Email);
-            if (user == null)
+            try
             {
-                return new AuthResponseDto(401, "Invalid credentials");
-            }
+                if (loginDto == null)
+                    throw new ArgumentNullException(nameof(loginDto), "Login request cannot be null");
 
-            bool verified = BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash);
-            if (!verified)
+                var user = (await _userRepo.GetAllAsync())
+                    .FirstOrDefault(u => u.Email == loginDto.Email.Trim().ToLower());
+
+                if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password.Trim(), user.PasswordHash))
+                    return new AuthResponseDto(401, "Invalid credentials");
+
+                // Generate JWT token
+                var token = GenerateJwtToken(user);
+
+                return new AuthResponseDto(200, "Login successful", token, null);
+            }
+            catch (Exception ex)
             {
-                return new AuthResponseDto(401, "Invalid credentials");
+                return new AuthResponseDto(500, $"Error during login: {ex.Message}");
             }
-
-            // Generate JWT tokens
-            var accessToken = GenerateJwtToken(user);
-            // For simplicity, refreshToken omitted but can be added similarly
-
-            return new AuthResponseDto(200, "Login successful", accessToken, null);
         }
 
         private string GenerateJwtToken(User user)
         {
             var jwtSettings = _configuration.GetSection("Jwt");
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var key = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(jwtSettings["Key"]));
+            var creds = new Microsoft.IdentityModel.Tokens.SigningCredentials(key, Microsoft.IdentityModel.Tokens.SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role.ToString())
+                new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Email, user.Email),
+                new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Role, user.Role.ToString())
             };
 
-            var token = new JwtSecurityToken(
+            var token = new System.IdentityModel.Tokens.Jwt.JwtSecurityToken(
                 issuer: jwtSettings["Issuer"],
                 audience: jwtSettings["Audience"],
                 claims: claims,
                 expires: DateTime.UtcNow.AddHours(1),
                 signingCredentials: creds
-                );
+            );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }
-
-
-
-
-
-
-
