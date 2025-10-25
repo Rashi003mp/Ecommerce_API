@@ -13,11 +13,22 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//service DI
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IProductService, ProductServices>();
+
+//repository DI
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
+
+//auto mapper
+builder.Services.AddAutoMapper(typeof(Program));
+//if false builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 
 //CloudinaryDI
-builder.Services.AddSingleton<CloudinaryService>();
 
 
 

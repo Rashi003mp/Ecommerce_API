@@ -1,0 +1,27 @@
+﻿using Ecommerce_API.Common;
+using Ecommerce_API.DTOs.ProductDTO;
+
+namespace Ecommerce_API.Services.Interfaces
+{
+    public interface IProductService
+    {
+        Task<ApiResponse<ProductDTO?>> GetProductByIdAsync(int id);
+
+
+
+        //    Task<IEnumerable<ProductDTO>> GetProductsByCategoryAsync(int categoryId);
+        //    Task<IEnumerable<ProductDTO>> GetAllProductsAsync();
+        //    Task<ApiResponse<IEnumerable<ProductDTO>>> GetFilteredProducts(
+        //    string? name = null,
+        //    int? categoryId = null,
+        //    string? brand = null,
+        //    decimal? minPrice = null,
+        //    decimal? maxPrice = null,
+        //    bool? inStock = null,
+        //    int page = 1,
+        //    int pageSize = 20,
+        //    string? sortBy = null,
+        //    bool descending = false
+        //);
+    }
+}
