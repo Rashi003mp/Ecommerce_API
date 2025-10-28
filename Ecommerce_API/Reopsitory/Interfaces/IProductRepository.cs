@@ -6,5 +6,21 @@ namespace Ecommerce_API.Reopsitory.Interfaces
     {
         Task<IEnumerable<Product>> GetProductsByCategoryAsync(int categoryId);
         Task<Product?> GetProductWithDetailsAsync(int id);
+
+        //Task<Product?> GetProductWithImagesAsync(int productId);
+
+
+        Task<IEnumerable<Product>> GetFilteredProductsAsync(
+    string? name,
+    int? categoryId,
+    decimal? minPrice,
+    decimal? maxPrice,
+    bool? inStock,
+    int page,
+    int pageSize,
+    string? sortBy,
+    bool descending
+);
+
     }
 }

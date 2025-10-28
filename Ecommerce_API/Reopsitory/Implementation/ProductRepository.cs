@@ -31,5 +31,51 @@ namespace Ecommerce_API.Reopsitory.Implementation
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
+        public async Task<IEnumerable<Product>> GetFilteredProductsAsync(
+    string? name,
+    int? categoryId,
+    decimal? minPrice,
+    decimal? maxPrice,
+    bool? inStock,
+    int page,
+    int pageSize,
+    string? sortBy,
+    bool descending)
+{
+    var query = _context.Products
+        .Include(p => p.Category)
+        .Include(p => p.Images)
+        .AsQueryable();
+
+    if (!string.IsNullOrEmpty(name))
+        query = query.Where(p => p.Name.Contains(name));
+
+    if (categoryId.HasValue)
+        query = query.Where(p => p.CategoryId == categoryId.Value);
+
+    if (minPrice.HasValue)
+        query = query.Where(p => p.Price >= minPrice.Value);
+
+    if (maxPrice.HasValue)
+        query = query.Where(p => p.Price <= maxPrice.Value);
+
+    if (inStock.HasValue)
+        query = query.Where(p => p.InStock == inStock.Value);
+
+    // Sorting
+    query = sortBy?.ToLower() switch
+    {
+        "price" => descending ? query.OrderByDescending(p => p.Price) : query.OrderBy(p => p.Price),
+        "name" => descending ? query.OrderByDescending(p => p.Name) : query.OrderBy(p => p.Name),
+        _ => query.OrderBy(p => p.Id) // Default
+    };
+
+    // Pagination
+    query = query.Skip((page - 1) * pageSize).Take(pageSize);
+
+    return await query.ToListAsync();
+}
+
+
     }
 }
