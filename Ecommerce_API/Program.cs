@@ -2,13 +2,13 @@
 using Ecommerce_API.Reopsitory.Implementation;
 using Ecommerce_API.Reopsitory.Interfaces;
 using Ecommerce_API.Services.CloudinaryService;
-using Ecommerce_API.Services.Implementation;
-using Ecommerce_API.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using Ecommerce_API.Services.Interfaces;
+using Ecommerce_API.Services.Implementation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,24 +51,24 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// ✅ Dependency Injection
+//  Dependency Injection
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IProductService, ProductServices>();
+builder.Services.AddScoped<IWishlistService, WishListService>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
-// ✅ AutoMapper
+//  AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-// ✅ Cloudinary
+//  Cloudinary
 builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
 
-// ✅ Database
+// Database
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// ✅ JWT Authentication
+//  JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -95,7 +95,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// ✅ Authentication must be before Authorization
+//  Authentication must be before Authorization
 app.UseAuthentication();
 app.UseAuthorization();
 

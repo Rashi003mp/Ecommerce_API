@@ -4,6 +4,7 @@ using Ecommerce_API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ecommerce_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251028113451_updatedWishlist")]
+    partial class updatedWishlist
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,7 +70,7 @@ namespace Ecommerce_API.Migrations
                         {
                             Id = 1,
                             CreatedBy = "system",
-                            CreatedOn = new DateTime(2025, 10, 28, 17, 5, 24, 60, DateTimeKind.Local).AddTicks(1197),
+                            CreatedOn = new DateTime(2025, 10, 28, 17, 4, 51, 447, DateTimeKind.Local).AddTicks(7802),
                             DeletedBy = "system",
                             IsDeleted = false,
                             ModifiedBy = "system",
@@ -77,7 +80,7 @@ namespace Ecommerce_API.Migrations
                         {
                             Id = 2,
                             CreatedBy = "system",
-                            CreatedOn = new DateTime(2025, 10, 28, 17, 5, 24, 60, DateTimeKind.Local).AddTicks(1209),
+                            CreatedOn = new DateTime(2025, 10, 28, 17, 4, 51, 447, DateTimeKind.Local).AddTicks(7814),
                             DeletedBy = "system",
                             IsDeleted = false,
                             ModifiedBy = "system",
@@ -87,7 +90,7 @@ namespace Ecommerce_API.Migrations
                         {
                             Id = 3,
                             CreatedBy = "system",
-                            CreatedOn = new DateTime(2025, 10, 28, 17, 5, 24, 60, DateTimeKind.Local).AddTicks(1211),
+                            CreatedOn = new DateTime(2025, 10, 28, 17, 4, 51, 447, DateTimeKind.Local).AddTicks(7815),
                             DeletedBy = "system",
                             IsDeleted = false,
                             ModifiedBy = "system",
@@ -160,7 +163,7 @@ namespace Ecommerce_API.Migrations
                             Id = 1,
                             CategoryId = 1,
                             CreatedBy = "system",
-                            CreatedOn = new DateTime(2025, 10, 28, 17, 5, 24, 60, DateTimeKind.Local).AddTicks(1328),
+                            CreatedOn = new DateTime(2025, 10, 28, 17, 4, 51, 447, DateTimeKind.Local).AddTicks(7903),
                             CurrentStock = 50,
                             DeletedBy = "system",
                             Description = "Classic Blue Denim Jacket",
@@ -176,7 +179,7 @@ namespace Ecommerce_API.Migrations
                             Id = 2,
                             CategoryId = 2,
                             CreatedBy = "system",
-                            CreatedOn = new DateTime(2025, 10, 28, 17, 5, 24, 60, DateTimeKind.Local).AddTicks(1331),
+                            CreatedOn = new DateTime(2025, 10, 28, 17, 4, 51, 447, DateTimeKind.Local).AddTicks(7905),
                             CurrentStock = 80,
                             DeletedBy = "system",
                             Description = "Unisex Red Hoodie",
@@ -192,7 +195,7 @@ namespace Ecommerce_API.Migrations
                             Id = 3,
                             CategoryId = 3,
                             CreatedBy = "system",
-                            CreatedOn = new DateTime(2025, 10, 28, 17, 5, 24, 60, DateTimeKind.Local).AddTicks(1333),
+                            CreatedOn = new DateTime(2025, 10, 28, 17, 4, 51, 447, DateTimeKind.Local).AddTicks(7907),
                             CurrentStock = 100,
                             DeletedBy = "system",
                             Description = "Soft cotton T-shirt for kids",
@@ -262,7 +265,7 @@ namespace Ecommerce_API.Migrations
                         {
                             Id = 1,
                             CreatedBy = "system",
-                            CreatedOn = new DateTime(2025, 10, 28, 17, 5, 24, 60, DateTimeKind.Local).AddTicks(1347),
+                            CreatedOn = new DateTime(2025, 10, 28, 17, 4, 51, 447, DateTimeKind.Local).AddTicks(7923),
                             DeletedBy = "system",
                             ImageUrl = "https://via.placeholder.com/300",
                             IsDeleted = false,
@@ -275,7 +278,7 @@ namespace Ecommerce_API.Migrations
                         {
                             Id = 2,
                             CreatedBy = "system",
-                            CreatedOn = new DateTime(2025, 10, 28, 17, 5, 24, 60, DateTimeKind.Local).AddTicks(1349),
+                            CreatedOn = new DateTime(2025, 10, 28, 17, 4, 51, 447, DateTimeKind.Local).AddTicks(7925),
                             DeletedBy = "system",
                             ImageUrl = "https://via.placeholder.com/300",
                             IsDeleted = false,
@@ -288,7 +291,7 @@ namespace Ecommerce_API.Migrations
                         {
                             Id = 3,
                             CreatedBy = "system",
-                            CreatedOn = new DateTime(2025, 10, 28, 17, 5, 24, 60, DateTimeKind.Local).AddTicks(1350),
+                            CreatedOn = new DateTime(2025, 10, 28, 17, 4, 51, 447, DateTimeKind.Local).AddTicks(7926),
                             DeletedBy = "system",
                             ImageUrl = "https://via.placeholder.com/300",
                             IsDeleted = false,
@@ -297,53 +300,6 @@ namespace Ecommerce_API.Migrations
                             ProductId = 3,
                             PublicId = "demo3"
                         });
-                });
-
-            modelBuilder.Entity("Ecommerce_API.Entities.Wishlist", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DeletedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("ModifiedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Wishlists");
                 });
 
             modelBuilder.Entity("Ecommerce_API.Models.User", b =>
@@ -425,25 +381,6 @@ namespace Ecommerce_API.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("Ecommerce_API.Entities.Wishlist", b =>
-                {
-                    b.HasOne("Ecommerce_API.Entities.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Ecommerce_API.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Ecommerce_API.Entities.Category", b =>
