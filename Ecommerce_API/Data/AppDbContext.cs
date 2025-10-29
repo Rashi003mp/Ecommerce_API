@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Ecommerce_API.Models;
+﻿using CloudinaryDotNet.Actions;
 using Ecommerce_API.Entities;
+using Ecommerce_API.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce_API.Data
 {
@@ -19,6 +20,9 @@ namespace Ecommerce_API.Data
 
         public DbSet<Wishlist> Wishlists { get; set; }
 
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
+
 
 
 
@@ -26,49 +30,75 @@ namespace Ecommerce_API.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Unique Email for Users
+            // ---- DECIMAL PRECISION FIX ----
+            modelBuilder.Entity<Product>()
+                .Property(p => p.Price)
+                .HasPrecision(18, 2);  // ✅ Add this
+
+            modelBuilder.Entity<CartItem>()
+                .Property(ci => ci.Price)
+                .HasPrecision(18, 2);  // ✅ Add this
+
+            // Cart → User
+            modelBuilder.Entity<Cart>()
+                .HasOne(c => c.User)
+                .WithOne(u => u.Cart)
+                .HasForeignKey<Cart>(c => c.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // CartItem → Cart
+            modelBuilder.Entity<CartItem>()
+                .HasOne(ci => ci.Cart)
+                .WithMany(c => c.Items)
+                .HasForeignKey(ci => ci.CartId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // CartItem → Product
+            modelBuilder.Entity<CartItem>()
+                .HasOne(ci => ci.Product)
+                .WithMany()
+                .HasForeignKey(ci => ci.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Wishlist → User
+            modelBuilder.Entity<Wishlist>()
+                .HasOne(w => w.User)
+                .WithMany(u => u.Wishlists)
+                .HasForeignKey(w => w.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Wishlist → Product
+            modelBuilder.Entity<Wishlist>()
+                .HasOne(w => w.Product)
+                .WithMany()
+                .HasForeignKey(w => w.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Unique Email
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Email)
                 .IsUnique();
 
+            // Enum conversion
             modelBuilder.Entity<User>()
                 .Property(u => u.Role)
                 .HasConversion<string>();
 
-            // Product and Category Relationship
+            // ✅ FIX CATEGORY DELETE ISSUE
             modelBuilder.Entity<Product>()
                 .HasOne(p => p.Category)
                 .WithMany(c => c.Products)
                 .HasForeignKey(p => p.CategoryId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade); // << CHANGE Restrict → Cascade
 
             // ProductImage Relationship
             modelBuilder.Entity<ProductImage>()
                 .HasOne(pi => pi.Product)
                 .WithMany(p => p.Images)
-                .HasForeignKey(pi => pi.ProductId);
-
-            // ✅ Seed Categories
-            modelBuilder.Entity<Category>().HasData(
-                new Category { Id = 1, Name = "Men", CreatedOn = DateTime.Now },
-                new Category { Id = 2, Name = "Women", CreatedOn = DateTime.Now },
-                new Category { Id = 3, Name = "Kids", CreatedOn = DateTime.Now }
-            );
-
-            // ✅ Seed Products
-            modelBuilder.Entity<Product>().HasData(
-                new Product { Id = 1, Name = "Denim Jacket", Description = "Classic Blue Denim Jacket", Price = 2499, CategoryId = 1, CurrentStock = 50, CreatedOn = DateTime.Now },
-                new Product { Id = 2, Name = "Red Hoodie", Description = "Unisex Red Hoodie", Price = 1799, CategoryId = 2, CurrentStock = 80, CreatedOn = DateTime.Now },
-                new Product { Id = 3, Name = "Kids Cartoon Tee", Description = "Soft cotton T-shirt for kids", Price = 599, CategoryId = 3, CurrentStock = 100, CreatedOn = DateTime.Now }
-            );
-
-            // ✅ Seed Product Images
-            modelBuilder.Entity<ProductImage>().HasData(
-                new ProductImage { Id = 1, ProductId = 1, ImageUrl = "https://via.placeholder.com/300", PublicId = "demo1", IsMain = true, CreatedOn = DateTime.Now },
-                new ProductImage { Id = 2, ProductId = 2, ImageUrl = "https://via.placeholder.com/300", PublicId = "demo2", IsMain = true, CreatedOn = DateTime.Now },
-                new ProductImage { Id = 3, ProductId = 3, ImageUrl = "https://via.placeholder.com/300", PublicId = "demo3", IsMain = true, CreatedOn = DateTime.Now }
-            );
+                .HasForeignKey(pi => pi.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
+
 
     }
 }

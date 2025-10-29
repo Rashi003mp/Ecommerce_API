@@ -146,7 +146,6 @@ namespace Ecommerce_API.Services.Implementation
                 return new ApiResponse<IEnumerable<ProductDTO>>(500, $"Error fetching products: {ex.Message}", null);
             }
         }
-
         public async Task<ApiResponse<string>> UpdateProductAsync(int id, UpdateProductDTO model)
         {
             try
@@ -155,26 +154,28 @@ namespace Ecommerce_API.Services.Implementation
                 if (product == null)
                     return new ApiResponse<string>(404, $"Product not found with id: {id}");
 
-                // ✅ Update simple fields only if provided
-                product.Name = model.Name ?? product.Name;
-                product.Description = model.Description ?? product.Description;
-                product.Price = model.Price ?? product.Price;
-                product.IsActive = model.IsActive ?? product.IsActive;
-                product.InStock = model.InStock ?? product.InStock;
-                product.CategoryId = model.CategoryId ?? product.CategoryId;
-                product.CurrentStock = model.CurrentStock ?? product.CurrentStock;
+                // ✅ Update fields only if provided (clean logic)
+                if (!string.IsNullOrWhiteSpace(model.Name)) product.Name = model.Name.Trim();
+                if (!string.IsNullOrWhiteSpace(model.Description)) product.Description = model.Description.Trim();
+                if (model.Price.HasValue) product.Price = model.Price.Value;
+                if (model.CategoryId.HasValue) product.CategoryId = model.CategoryId.Value;
+                if (model.CurrentStock.HasValue)
+                {
+                    product.CurrentStock = model.CurrentStock.Value;
+                    product.InStock = model.CurrentStock.Value > 0; // auto update
+                }
+                if (model.IsActive.HasValue) product.IsActive = model.IsActive.Value;
 
-                // ✅ IMAGE UPDATE LOGIC
+                // ✅ IMAGE UPDATE LOGIC (Reused same logic but cleaner style)
                 if (model.ReplaceImages && model.NewImages != null && model.NewImages.Any())
                 {
-                    // Delete all existing images from Cloudinary
+                    // Remove all old images
                     foreach (var img in product.Images)
-                    {
                         await _cloudinaryService.DeleteImageAsync(img.PublicId);
-                    }
+
                     product.Images.Clear();
 
-                    // Upload new images
+                    // Add new images
                     foreach (var file in model.NewImages)
                     {
                         var (url, publicId) = await _cloudinaryService.UploadImageAsync(file);
@@ -192,7 +193,7 @@ namespace Ecommerce_API.Services.Implementation
                 }
                 else
                 {
-                    // Delete selected images only
+                    // Delete selected images
                     if (model.ImagesToDelete != null && model.ImagesToDelete.Any())
                     {
                         foreach (var publicId in model.ImagesToDelete)
@@ -206,7 +207,7 @@ namespace Ecommerce_API.Services.Implementation
                         }
                     }
 
-                    // Add new images
+                    // Add new ones
                     if (model.NewImages != null && model.NewImages.Any())
                     {
                         foreach (var file in model.NewImages)
@@ -232,6 +233,7 @@ namespace Ecommerce_API.Services.Implementation
                 return new ApiResponse<string>(500, $"Error updating product: {ex.Message}");
             }
         }
+
 
     }
 }

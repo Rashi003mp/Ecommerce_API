@@ -1,14 +1,15 @@
 ﻿using Ecommerce_API.Data;
 using Ecommerce_API.Reopsitory.Implementation;
 using Ecommerce_API.Reopsitory.Interfaces;
+using Ecommerce_API.Repositories.Implementation;
 using Ecommerce_API.Services.CloudinaryService;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Microsoft.OpenApi.Models;
-using Ecommerce_API.Services.Interfaces;
 using Ecommerce_API.Services.Implementation;
+using Ecommerce_API.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,9 +55,13 @@ builder.Services.AddSwaggerGen(c =>
 //  Dependency Injection
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IWishlistService, WishListService>();
+builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<IProductService, ProductServices>();
+
+
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
-
+builder.Services.AddScoped<ICartRepository, CartRepository>();
 //  AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
