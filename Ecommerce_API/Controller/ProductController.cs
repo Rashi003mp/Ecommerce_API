@@ -17,7 +17,6 @@ namespace Ecommerce_API.Controller
             _productService = productService;
         }
 
-        // get Product by id
         [HttpGet("{id}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetProductById(int id)
@@ -27,7 +26,6 @@ namespace Ecommerce_API.Controller
         }
 
 
-        // get Products with filtering, pagination, and sorting or all products
         [HttpGet("filter")]
         [AllowAnonymous]
         public async Task<IActionResult> GetFilteredProducts(
@@ -48,7 +46,6 @@ namespace Ecommerce_API.Controller
             return StatusCode(response.StatusCode, response);
         }
 
-        // Add Product
         [HttpPost]
         [Authorize(Policy = "Admin")]
         public async Task<IActionResult> CreateProduct([FromForm] CreateProductDTO model)
@@ -61,7 +58,6 @@ namespace Ecommerce_API.Controller
         }
 
 
-        // Update Product
         [HttpPut("{id}")]
         [Authorize(Policy = "Admin")]
         public async Task<IActionResult> UpdateProduct(int id, [FromForm] UpdateProductDTO model)

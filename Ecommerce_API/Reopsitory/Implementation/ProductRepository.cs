@@ -67,7 +67,7 @@ namespace Ecommerce_API.Reopsitory.Implementation
     {
         "price" => descending ? query.OrderByDescending(p => p.Price) : query.OrderBy(p => p.Price),
         "name" => descending ? query.OrderByDescending(p => p.Name) : query.OrderBy(p => p.Name),
-        _ => query.OrderBy(p => p.Id) // Default
+        _ => query.OrderBy(p => p.Id)
     };
 
     // Pagination

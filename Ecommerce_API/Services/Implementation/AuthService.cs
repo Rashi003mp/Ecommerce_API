@@ -50,7 +50,7 @@ namespace Ecommerce_API.Services.Implementation
                     Name = registerDto.Name,
                     Email = registerDto.Email,
                     PasswordHash = passwordHash,
-                    Role = Roles.admin,          // default role
+                    Role = Roles.user,     
                     CreatedOn = DateTime.UtcNow,
                     CreatedBy = "system"
                 };

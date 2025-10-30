@@ -5,7 +5,6 @@ namespace Ecommerce_API.Entities
     public class CartItem : BaseEntity
     {
 
-        // Foreign key
         public int CartId { get; set; }
         public Cart Cart { get; set; }
 

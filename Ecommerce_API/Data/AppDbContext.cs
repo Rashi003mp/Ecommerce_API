@@ -1,5 +1,4 @@
-﻿using CloudinaryDotNet.Actions;
-using Ecommerce_API.Entities;
+﻿using Ecommerce_API.Entities;
 using Ecommerce_API.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,14 +29,13 @@ namespace Ecommerce_API.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // ---- DECIMAL PRECISION FIX ----
             modelBuilder.Entity<Product>()
                 .Property(p => p.Price)
-                .HasPrecision(18, 2);  // ✅ Add this
+                .HasPrecision(18, 2);
 
             modelBuilder.Entity<CartItem>()
                 .Property(ci => ci.Price)
-                .HasPrecision(18, 2);  // ✅ Add this
+                .HasPrecision(18, 2);
 
             // Cart → User
             modelBuilder.Entity<Cart>()
@@ -84,12 +82,11 @@ namespace Ecommerce_API.Data
                 .Property(u => u.Role)
                 .HasConversion<string>();
 
-            // ✅ FIX CATEGORY DELETE ISSUE
             modelBuilder.Entity<Product>()
                 .HasOne(p => p.Category)
                 .WithMany(c => c.Products)
                 .HasForeignKey(p => p.CategoryId)
-                .OnDelete(DeleteBehavior.Cascade); // << CHANGE Restrict → Cascade
+                .OnDelete(DeleteBehavior.Cascade);
 
             // ProductImage Relationship
             modelBuilder.Entity<ProductImage>()

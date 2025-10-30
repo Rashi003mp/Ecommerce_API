@@ -19,7 +19,7 @@ namespace Ecommerce_API.Services.Implementation
             IMapper mapper,
             IGenericRepository<Product> repository,
             IProductRepository productRepository,
-            ICloudinaryService cloudinaryService)   // <- injected
+            ICloudinaryService cloudinaryService)   
         {
             _mapper = mapper;
             _repository = repository;
@@ -46,10 +46,8 @@ namespace Ecommerce_API.Services.Implementation
             }
         }
 
-        // --- NEW METHOD ---
         public async Task<ApiResponse<ProductDTO>> AddProductAsync(CreateProductDTO model)
         {
-            // Basic argument validation
             if (model == null)
                 return new ApiResponse<ProductDTO>(400, "Invalid product data");
 
@@ -59,7 +57,6 @@ namespace Ecommerce_API.Services.Implementation
             if (model.MainImageIndex < 0 || model.MainImageIndex >= model.Images.Count)
                 return new ApiResponse<ProductDTO>(400, "MainImageIndex is out of range.");
 
-            // We'll keep track of uploaded publicIds for cleanup if something fails.
             var uploadedPublicIds = new List<string>();
 
             try
@@ -67,10 +64,8 @@ namespace Ecommerce_API.Services.Implementation
                 // Map DTO -> Entity (Images ignored by mapping as configured)
                 var product = _mapper.Map<Product>(model);
 
-                // Make sure initial state is sane
                 product.IsActive = true;
                 product.InStock = model.CurrentStock > 0;
-                // Ensure Images collection is empty (mapper ignores images)
                 product.Images = new List<ProductImage>();
 
                 // Upload files to Cloudinary and add to product.Images

@@ -9,6 +9,8 @@ namespace Ecommerce_API.DTOs.AuthDTO
   ErrorMessage = "Name must start with a capital letter and contain only letters and spaces")]
         [MaxLength(50, ErrorMessage = "Name cannot exceed 50 characters")]
         public string Name { get; set; } = null!;
+
+
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid email format")]
         [MaxLength(150, ErrorMessage = "Email cannot exceed 150 characters")]
