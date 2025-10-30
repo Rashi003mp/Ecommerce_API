@@ -19,7 +19,7 @@ namespace Ecommerce_API.Reopsitory.Implementation
 
         public async Task<IEnumerable<T>> GetAllAsync() => await _dbSet.ToListAsync();
 
-        public virtual async Task<T> GetByIdAsync(int id) => await _dbSet.FindAsync(id);
+        public  async Task<T> GetByIdAsync(int id) => await _dbSet.FindAsync(id);
 
         public async Task AddAsync(T Entity)
         {

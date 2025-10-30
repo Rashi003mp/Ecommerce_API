@@ -1,4 +1,5 @@
 ﻿using Ecommerce_API.Data;
+using Ecommerce_API.Middleware;
 using Ecommerce_API.Reopsitory.Implementation;
 using Ecommerce_API.Reopsitory.Interfaces;
 using Ecommerce_API.Repositories.Implementation;
@@ -57,13 +58,13 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IWishlistService, WishListService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IProductService, ProductServices>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
+//builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
-builder.Services.AddScoped<ICategoryRepository,CategoryRepository >();
+//builder.Services.AddScoped<ICategoryRepository,CategoryRepository >();
 
 //  AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -103,7 +104,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-//  Authentication must be before Authorization
+app.UseCustomExceptionMiddleware();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
