@@ -43,6 +43,13 @@ namespace Ecommerce_API.Reopsitory.Implementation
                 await _context.SaveChangesAsync();
             }
         }
+        public async Task DeleteAsyncByEntity(T entity)
+        {
+            _dbSet.Remove(entity);
+            await _context.SaveChangesAsync();
+        }
+
+
         public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
 
     }

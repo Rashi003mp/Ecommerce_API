@@ -9,7 +9,16 @@ namespace Ecommerce_API.Reopsitory.Interfaces
         Task AddAsync(T entity);
         Task UpdateAsync(T entity);
         Task DeleteAsync(int id);
+        Task DeleteAsyncByEntity(T entity);
         Task SaveChangesAsync();
 
     }
 }
+
+
+
+/** public async Task DeleteAsync(T entity)
+        {
+            _dbSet.Remove(entity);
+            await _context.SaveChangesAsync();
+        }*/

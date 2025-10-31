@@ -14,6 +14,7 @@ namespace Ecommerce_API.Models
 
         public ICollection<Wishlist> Wishlists { get; set; }
 
+        public ICollection<Address> Addresses { get; set; } = new List<Address>();
 
         public Roles Role { get; set; } = Roles.user;
         public bool IsBlocked { get; set; } = false;
