@@ -94,9 +94,9 @@ public class CartService : ICartService
             return new ApiResponse<string>(404, "Cart item not found");
 
         cartItem.Quantity = quantity;
-        _cartRepository.Update(cartItem);
+        await _cartRepository.UpdateCartItemAsync(cartItem);
 
-        await _cartRepository.SaveChangesAsync();
+        //await _cartRepository.SaveChangesAsync();
 
         return new ApiResponse<string>(200, "Cart item updated successfully");
     }

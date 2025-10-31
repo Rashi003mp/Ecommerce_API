@@ -59,7 +59,7 @@ namespace Ecommerce_API.Controller
 
 
         [HttpPut("{id}")]
-        [Authorize(Policy = "Admin")]
+        [Authorize(Policy = "user")]
         public async Task<IActionResult> UpdateProduct(int id, [FromForm] UpdateProductDTO model)
         {
             var response = await _productService.UpdateProductAsync(id, model);

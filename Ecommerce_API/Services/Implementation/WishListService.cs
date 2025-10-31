@@ -18,7 +18,7 @@ namespace Ecommerce_API.Services.Implementation
         public async Task<ApiResponse<object>> GetWishlistAsync(int userId)
         {
             var items = await _Context.Wishlists
-                .Where(x => x.UserId == userId && !x.IsDeleted)
+                .Where(x => x.UserId == userId && x.Product.IsActive)
                 .Include(x => x.Product)
                     .ThenInclude(p => p.Images)
                 .AsNoTracking()
@@ -39,7 +39,7 @@ namespace Ecommerce_API.Services.Implementation
         public async Task<ApiResponse<string>> ToggleWishlistasync(int userId, int productId)
         {
             var existing = await _Context.Wishlists
-                .FirstOrDefaultAsync(w => w.UserId == userId && w.ProductId == productId && !w.IsDeleted);
+                .FirstOrDefaultAsync(w => w.UserId == userId && w.ProductId == productId && !w.Product.IsActive);
 
             if (existing != null)
             {

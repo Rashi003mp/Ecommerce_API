@@ -11,10 +11,12 @@ namespace Ecommerce_API.Repositories.Implementation
     public class CartRepository : GenericRepository<Cart>, ICartRepository
     {
         private readonly AppDbContext _context;
+        private readonly GenericRepository<CartItem> _cartItemRepo;
 
         public CartRepository(AppDbContext context) : base(context)
         {
             _context = context;
+            _cartItemRepo = new GenericRepository<CartItem>(context);
         }
 
         public async Task<Cart?> GetCartWithItemsByUserIdAsync(int userId)
@@ -34,9 +36,9 @@ namespace Ecommerce_API.Repositories.Implementation
                                            && !ci.Cart.IsDeleted);
         }
 
-        public void Update(CartItem cartItem)
+        public async Task UpdateCartItemAsync(CartItem cartItem)
         {
-            _context.CartItems.Update(cartItem);
+            await _cartItemRepo.UpdateAsync(cartItem);
         }
 
         public async Task ClearCartForUserAsync(int userId)

@@ -19,7 +19,7 @@ namespace Ecommerce_API.Reopsitory.Implementation
             return await _context.Products
                 .Include(p => p.Category)
                 .Include(p => p.Images)
-                .Where(p => p.CategoryId == categoryId)
+                .Where(p => p.CategoryId == categoryId && p.IsActive && !p.IsDeleted)
                 .ToListAsync();
         }
 
@@ -41,40 +41,40 @@ namespace Ecommerce_API.Reopsitory.Implementation
     int pageSize,
     string? sortBy,
     bool descending)
-{
-    var query = _context.Products
-        .Include(p => p.Category)
-        .Include(p => p.Images)
-        .AsQueryable();
+        {
+            var query = _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Images)
+                .AsQueryable();
 
-    if (!string.IsNullOrEmpty(name))
-        query = query.Where(p => p.Name.Contains(name));
+            if (!string.IsNullOrEmpty(name))
+                query = query.Where(p => p.Name.Contains(name));
 
-    if (categoryId.HasValue)
-        query = query.Where(p => p.CategoryId == categoryId.Value);
+            if (categoryId.HasValue)
+                query = query.Where(p => p.CategoryId == categoryId.Value);
 
-    if (minPrice.HasValue)
-        query = query.Where(p => p.Price >= minPrice.Value);
+            if (minPrice.HasValue)
+                query = query.Where(p => p.Price >= minPrice.Value);
 
-    if (maxPrice.HasValue)
-        query = query.Where(p => p.Price <= maxPrice.Value);
+            if (maxPrice.HasValue)
+                query = query.Where(p => p.Price <= maxPrice.Value);
 
-    if (inStock.HasValue)
-        query = query.Where(p => p.InStock == inStock.Value);
+            if (inStock.HasValue)
+                query = query.Where(p => p.InStock == inStock.Value);
 
-    // Sorting
-    query = sortBy?.ToLower() switch
-    {
-        "price" => descending ? query.OrderByDescending(p => p.Price) : query.OrderBy(p => p.Price),
-        "name" => descending ? query.OrderByDescending(p => p.Name) : query.OrderBy(p => p.Name),
-        _ => query.OrderBy(p => p.Id)
-    };
+            // Sorting
+            query = sortBy?.ToLower() switch
+            {
+                "price" => descending ? query.OrderByDescending(p => p.Price) : query.OrderBy(p => p.Price),
+                "name" => descending ? query.OrderByDescending(p => p.Name) : query.OrderBy(p => p.Name),
+                _ => query.OrderBy(p => p.Id)
+            };
 
-    // Pagination
-    query = query.Skip((page - 1) * pageSize).Take(pageSize);
+            // Pagination
+            query = query.Skip((page - 1) * pageSize).Take(pageSize);
 
-    return await query.ToListAsync();
-}
+            return await query.ToListAsync();
+        }
 
 
     }
