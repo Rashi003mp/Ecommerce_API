@@ -106,7 +106,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCustomExceptionMiddleware();
+//app.UseCustomExceptionMiddleware();
 
 app.UseAuthentication();
 app.UseAuthorization();

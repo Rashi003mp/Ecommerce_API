@@ -21,10 +21,20 @@ namespace Ecommerce_API.Repositories.Implementation
 
         public async Task<Cart?> GetCartWithItemsByUserIdAsync(int userId)
         {
-            return await _context.Carts
-                .Include(c => c.Items)
-                    .ThenInclude(i => i.Product)
-                .FirstOrDefaultAsync(c => c.UserId == userId && !c.IsDeleted);
+            var cart = await _context.Carts
+         .Where(c => c.UserId == userId && !c.IsDeleted)
+         .Include(c => c.Items)
+             .ThenInclude(i => i.Product)
+         .FirstOrDefaultAsync();
+
+            if (cart != null)
+            {
+                cart.Items = cart.Items
+                    .Where(i => i.Product != null && !i.Product.IsDeleted && i.Product.IsActive)
+                    .ToList();
+            }
+
+            return cart;
         }
 
         public async Task<CartItem?> GetCartItemByIdAsync(int cartItemId, int userId)

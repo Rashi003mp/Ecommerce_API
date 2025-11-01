@@ -16,6 +16,9 @@ namespace Ecommerce_API.Models
 
         public ICollection<Address> Addresses { get; set; } = new List<Address>();
 
+        public ICollection<Order> Orders { get; set; } = new List<Order>();
+
+
         public Roles Role { get; set; } = Roles.user;
         public bool IsBlocked { get; set; } = false;
     }

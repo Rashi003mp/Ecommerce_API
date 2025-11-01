@@ -17,8 +17,3 @@ namespace Ecommerce_API.Reopsitory.Interfaces
 
 
 
-/** public async Task DeleteAsync(T entity)
-        {
-            _dbSet.Remove(entity);
-            await _context.SaveChangesAsync();
-        }*/

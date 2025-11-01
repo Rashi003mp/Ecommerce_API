@@ -1,4 +1,5 @@
-﻿using Ecommerce_API.DTOs.AddressDTO;
+﻿using AutoMapper;
+using Ecommerce_API.DTOs.AddressDTO;
 using Ecommerce_API.Entities;
 using Ecommerce_API.Reopsitory.Interfaces;
 using Ecommerce_API.Services.Interfaces;
@@ -8,75 +9,36 @@ namespace Ecommerce_API.Services.Implementation
     public class AddressService : IAddressService
     {
         private readonly IAddressRepository _addressRepository;
-
-        public AddressService(IAddressRepository addressRepository)
+        private readonly IMapper _mapper;
+        public AddressService(IAddressRepository addressRepository , IMapper mapper)
         {
             _addressRepository = addressRepository;
+            _mapper = mapper;
         }
 
         // Get all addresses for a user
         public async Task<IEnumerable<AddressDto>> GetUserAddressesAsync(int userId)
         {
             var addresses = await _addressRepository.GetUserAddressesAsync(userId);
-
-            // Manual mapping to DTOs
-            return addresses.Select(a => new AddressDto
-            {
-                Id = a.Id,
-                FullName = a.FullName,
-                PhoneNumber = a.PhoneNumber,
-                AddressLine1 = a.AddressLine1,
-                AddressLine2 = a.AddressLine2,
-                City = a.City,
-                State = a.State,
-                Country = a.Country,
-                PostalCode = a.PostalCode,
-                IsDefault = a.IsDefault
-            });
+            return _mapper.Map<IEnumerable<AddressDto>>(addresses);
         }
 
         // Get specific address
         public async Task<AddressDto?> GetAddressByIdAsync(int id, int userId)
         {
             var address = await _addressRepository.GetAddressByIdAsync(id, userId);
-            if (address == null) return null;
-
-            return new AddressDto
-            {
-                Id = address.Id,
-                FullName = address.FullName,
-                PhoneNumber = address.PhoneNumber,
-                AddressLine1 = address.AddressLine1,
-                AddressLine2 = address.AddressLine2,
-                City = address.City,
-                State = address.State,
-                Country = address.Country,
-                PostalCode = address.PostalCode,
-                IsDefault = address.IsDefault
-            };
+            return address == null ? null : _mapper.Map<AddressDto>(address);
         }
 
         // Create new address
         public async Task<AddressDto> CreateAddressAsync(AddressDto dto, int userId)
         {
-            var address = new Address
-            {
-                UserId = userId,
-                FullName = dto.FullName,
-                PhoneNumber = dto.PhoneNumber,
-                AddressLine1 = dto.AddressLine1,
-                AddressLine2 = dto.AddressLine2,
-                City = dto.City,
-                State = dto.State,
-                Country = dto.Country,
-                PostalCode = dto.PostalCode,
-                IsDefault = dto.IsDefault
-            };
+            var address = _mapper.Map<Address>(dto);
+            address.UserId = userId;
 
             await _addressRepository.AddAsync(address);
 
-            dto.Id = address.Id;
-            return dto;
+            return _mapper.Map<AddressDto>(address);
         }
 
         // Update address
@@ -85,26 +47,17 @@ namespace Ecommerce_API.Services.Implementation
             var existing = await _addressRepository.GetAddressByIdAsync(id, userId);
             if (existing == null) return null;
 
-            existing.FullName = dto.FullName;
-            existing.PhoneNumber = dto.PhoneNumber;
-            existing.AddressLine1 = dto.AddressLine1;
-            existing.AddressLine2 = dto.AddressLine2;
-            existing.City = dto.City;
-            existing.State = dto.State;
-            existing.Country = dto.Country;
-            existing.PostalCode = dto.PostalCode;
-            existing.IsDefault = dto.IsDefault;
+            // Map updated fields onto existing entity
+            _mapper.Map(dto, existing);
 
             await _addressRepository.UpdateAsync(existing);
-
-            return dto;
+            return _mapper.Map<AddressDto>(existing);
         }
 
         // Delete address
         public async Task<bool> DeleteAddressAsync(int id, int userId)
         {
             var address = await _addressRepository.GetAddressByIdAsync(id, userId);
-            Console.WriteLine(address);
             if (address == null) return false;
 
             await _addressRepository.DeleteAsyncByEntity(address);

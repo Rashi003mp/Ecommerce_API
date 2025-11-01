@@ -8,7 +8,7 @@ namespace Ecommerce_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize] // ✅ Require authentication (only logged-in users can access)
+    [Authorize] 
     public class AddressController : ControllerBase
     {
         private readonly IAddressService _addressService;
@@ -18,14 +18,13 @@ namespace Ecommerce_API.Controllers
             _addressService = addressService;
         }
 
-        // 🧩 Helper to get logged-in userId from token
         private int GetUserId()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             return int.TryParse(userIdClaim, out var userId) ? userId : 0;
         }
 
-        // ✅ GET /api/addresses
+        // api/addresses
         [HttpGet]
         public async Task<IActionResult> GetUserAddresses()
         {
@@ -36,7 +35,7 @@ namespace Ecommerce_API.Controllers
             return Ok(addresses);
         }
 
-        // ✅ GET /api/addresses/{id}
+        ///api/addresses/{id}
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAddressById(int id)
         {
@@ -50,7 +49,7 @@ namespace Ecommerce_API.Controllers
             return Ok(address);
         }
 
-        // ✅ POST /api/addresses
+        // /api/addresses
         [HttpPost]
         public async Task<IActionResult> CreateAddress([FromBody] AddressDto dto)
         {
@@ -61,7 +60,7 @@ namespace Ecommerce_API.Controllers
             return CreatedAtAction(nameof(GetAddressById), new { id = created.Id }, created);
         }
 
-        // ✅ PUT /api/addresses/{id}
+        // /api/addresses/{id}
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAddress(int id, [FromBody] AddressDto dto)
         {
@@ -75,7 +74,7 @@ namespace Ecommerce_API.Controllers
             return Ok(updated);
         }
 
-        // ✅ DELETE /api/addresses/{id}
+        //  /api/addresses/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAddress(int id)
         {
