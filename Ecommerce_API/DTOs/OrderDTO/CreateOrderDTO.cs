@@ -6,7 +6,7 @@ namespace Ecommerce_API.DTOs.OrderDTO
     public class CreateOrderDTO
     {
         // Either existing address
-        public int AddressId { get; set; }
+        public int? AddressId { get; set; }
 
         // Or provide new address
         public AddressDto? NewAddress { get; set; }

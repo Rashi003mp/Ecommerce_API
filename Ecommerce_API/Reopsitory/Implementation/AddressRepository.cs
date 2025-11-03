@@ -23,7 +23,7 @@ namespace Ecommerce_API.Reopsitory.Implementation
         }
 
         // Get a single address by id (must belong to the user)
-        public async Task<Address?> GetAddressByIdAsync(int id, int userId)
+        public async Task<Address?> GetAddressByIdAsync(int? id, int userId)
         {
             return await _context.Addresses
                 .FirstOrDefaultAsync(a => a.Id == id && a.UserId == userId);

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace Treazr_Backend.Controllers
+namespace Ecommerce_API.Controllers
 {
     [Authorize]
     [ApiController]
@@ -60,7 +60,9 @@ namespace Treazr_Backend.Controllers
         //    return StatusCode(result.StatusCode, result);
         //}
 
-
+        //<Summery>
+        //to update order status for admins>
+        //<Summery>
         [HttpPost("admin/update-status/{orderId}")]
         [Authorize(Policy = "Admin")]
         public async Task<IActionResult> UpdateOrderStatus(int orderId, OrderStatus newStatus)
@@ -140,11 +142,4 @@ namespace Treazr_Backend.Controllers
         }
 
     }
-
-
-    //public class BuyNowRequestDTO
-    //{
-    //    public BuyNowDTO BuyNow { get; set; } = default!;
-    //    public CreateOrderDTO Order { get; set; } = default!;
-    //}
 }

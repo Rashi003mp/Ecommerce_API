@@ -4,7 +4,6 @@ using Ecommerce_API.DTOs.CategoryDTO;
 using Ecommerce_API.DTOs.OrderDTO;
 using Ecommerce_API.DTOs.ProductDTO;
 using Ecommerce_API.Entities;
-using Treazr_Backend.DTOs.OrderDto;
 
 public class MappingProfile : Profile
 {

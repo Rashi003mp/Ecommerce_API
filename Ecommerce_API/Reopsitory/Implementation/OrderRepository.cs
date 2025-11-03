@@ -5,13 +5,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce_API.Reopsitory.Implementation
 {
-    public class OrderRepository : IOrderRepository
+    public class OrderRepository : GenericRepository<Order>, IOrderRepository
     {
         private readonly AppDbContext _context;
+        private readonly GenericRepository<Order> _OrderRepo;
 
-        public OrderRepository(AppDbContext context)
+
+        public OrderRepository(AppDbContext context) : base(context)
         {
             _context = context;
+            _OrderRepo = new GenericRepository<Order>(context);
         }
 
         // 🛒 USER: Get cart items for checkout
