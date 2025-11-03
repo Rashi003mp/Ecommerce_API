@@ -12,8 +12,6 @@ namespace Ecommerce_API.Reopsitory.Interfaces
         Task<List<Order>> GetOrdersByUserIdAsync(int userId);
         Task<bool> DeleteCartItemsAsync(IEnumerable<CartItem> cartItems);
 
-        // ---- Payment-related ----
-        Task<Order?> GetByRazorpayOrderIdAsync(string razorpayOrderId);
         Task UpdateOrderAsync(Order order);
 
         // ---- Admin operations ----
@@ -22,6 +20,9 @@ namespace Ecommerce_API.Reopsitory.Interfaces
         Task<List<Order>> SearchOrdersAsync(string username);
         Task<List<Order>> GetOrdersByStatusAsync(OrderStatus status);
         Task<List<Order>> SortOrdersByDateAsync(bool ascending);
+
+        // ---- Payment-related ----
+        //Task<Order?> GetByRazorpayOrderIdAsync(string razorpayOrderId);
     }
 
 }

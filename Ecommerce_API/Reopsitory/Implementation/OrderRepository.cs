@@ -71,11 +71,11 @@ namespace Ecommerce_API.Reopsitory.Implementation
         }
 
         // 💳 PAYMENT: Get order by Razorpay Order ID
-        public async Task<Order?> GetByRazorpayOrderIdAsync(string razorpayOrderId)
-        {
-            return await _context.Orders
-                .FirstOrDefaultAsync(o => o.RazorpayOrderId == razorpayOrderId);
-        }
+        //public async Task<Order?> GetByRazorpayOrderIdAsync(string razorpayOrderId)
+        //{
+        //    return await _context.Orders
+        //        .FirstOrDefaultAsync(o => o.RazorpayOrderId == razorpayOrderId);
+        //}
 
         // 💳 PAYMENT: Update order status (e.g., after payment success)
         public async Task UpdateOrderAsync(Order order)
