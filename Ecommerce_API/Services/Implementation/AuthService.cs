@@ -76,7 +76,17 @@ namespace Ecommerce_API.Services.Implementation
                 var user = (await _userRepo.GetAllAsync())
                     .FirstOrDefault(u => u.Email == loginDto.Email.Trim().ToLower());
 
-                if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password.Trim(), user.PasswordHash))
+                if (user == null)
+                    return new AuthResponseDto(404, "User not found");
+
+                if (user.IsDeleted)
+                    return new AuthResponseDto(403, "Your account has been deleted. Please contact support.");
+
+                if (user.IsBlocked)
+                    return new AuthResponseDto(403, "Your account is blocked. Please contact support.");
+
+                // Verify password
+                if (!BCrypt.Net.BCrypt.Verify(loginDto.Password.Trim(), user.PasswordHash))
                     return new AuthResponseDto(401, "Invalid credentials");
 
                 // Generate JWT token
@@ -89,6 +99,7 @@ namespace Ecommerce_API.Services.Implementation
                 return new AuthResponseDto(500, $"Error during login: {ex.Message}");
             }
         }
+
 
         private string GenerateJwtToken(User user)
         {

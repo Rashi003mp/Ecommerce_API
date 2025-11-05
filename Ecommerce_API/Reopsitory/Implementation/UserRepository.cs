@@ -3,7 +3,7 @@ using Ecommerce_API.Reopsitory.Interfaces;
 
 namespace Ecommerce_API.Reopsitory.Implementation
 {
-    public class UserRepository
+    public class UserRepository :IUserRepository
     {
 
         private readonly AppDbContext _context;

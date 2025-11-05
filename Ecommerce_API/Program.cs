@@ -60,15 +60,16 @@ builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IProductService, ProductServices>();
 builder.Services.AddScoped<IAddressService, AddressService>();
 builder.Services.AddScoped<IOrderService,OrderService >();
-
-//builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IUserService,UserService >();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 builder.Services.AddScoped<IAddressRepository, AddressRepository>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<IOrderRepository,OrderRepository >();
-//builder.Services.AddScoped<ICategoryRepository,CategoryRepository >();
+builder.Services.AddScoped<ICategoryRepository,CategoryRepository >();
+builder.Services.AddScoped<IUserRepository,UserRepository >();
 
 //  AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
