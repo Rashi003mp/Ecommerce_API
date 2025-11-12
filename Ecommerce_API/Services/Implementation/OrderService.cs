@@ -40,6 +40,8 @@ namespace Ecommerce_API.Services.Implementation
                 address = new Address
                 {
                     UserId = userId,
+                    FullName = dto.NewAddress?.FullName ?? string.Empty,      
+                    PhoneNumber = dto.NewAddress?.PhoneNumber ?? string.Empty,
                     AddressLine1 = dto.NewAddress?.AddressLine1,
                     AddressLine2 = dto.NewAddress?.AddressLine2,
                     City = dto.NewAddress?.City,
@@ -194,7 +196,7 @@ namespace Ecommerce_API.Services.Implementation
         }
 
 
-        // ✅ Get Order by ID
+       
         public async Task<ApiResponse<OrderResponseDTO>> GetOrderbyIdAsync(int orderId)
         {
             var order = await _orderRepository.GetOrderByIdAsync(orderId);
@@ -205,7 +207,7 @@ namespace Ecommerce_API.Services.Implementation
             return new ApiResponse<OrderResponseDTO>(200, "Order fetched successfully", mapped);
         }
 
-        // ✅ Search Orders by Username (Admin)
+        // Search Orders by Username (Admin)
         public async Task<ApiResponse<IEnumerable<OrderResponseDTO>>> SearchOrdersAsync(string username)
         {
             var orders = await _orderRepository.SearchOrdersAsync(username);
@@ -213,7 +215,7 @@ namespace Ecommerce_API.Services.Implementation
             return new ApiResponse<IEnumerable<OrderResponseDTO>>(200, "Orders fetched successfully", mapped);
         }
 
-        // ✅ Filter Orders by Status (Admin)
+        // Filter Orders by Status (Admin)
         public async Task<ApiResponse<IEnumerable<OrderResponseDTO>>> GetOrdersByStatus(OrderStatus status)
         {
             var orders = await _orderRepository.GetOrdersByStatusAsync(status);
@@ -221,7 +223,7 @@ namespace Ecommerce_API.Services.Implementation
             return new ApiResponse<IEnumerable<OrderResponseDTO>>(200, "Orders fetched successfully", mapped);
         }
 
-        // ✅ Sort Orders by Date (Admin)
+        // Sort Orders by Date (Admin)
         public async Task<ApiResponse<IEnumerable<OrderResponseDTO>>> SortOrdersByDateAsync(bool ascending)
         {
             var orders = await _orderRepository.SortOrdersByDateAsync(ascending);
@@ -230,7 +232,7 @@ namespace Ecommerce_API.Services.Implementation
         }
 
         /*
-        // 🔒 Razorpay Payment Verification (Enable after payment setup)
+        // Razorpay Payment Verification (Enable after payment setup)
         public async Task<ApiResponse<object>> VerifyRazorpayPaymentAsync(PaymentVerifyDto dto)
         {
             var verified = RazorpayUtils.VerifyPaymentSignature(dto);

@@ -28,7 +28,8 @@ namespace Ecommerce_API.Controllers
 
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreateOrder([FromBody] CreateOrderDTO dto, [FromQuery] int? productId = null, [FromQuery] int? quantity = null)
+        public async Task<IActionResult> CreateOrder([FromBody] CreateOrderDTO dto, [FromQuery] int? productId = null
+            , [FromQuery] int? quantity = null)
         {
             if (!User.Identity.IsAuthenticated)
                 return Unauthorized("User not authenticated");

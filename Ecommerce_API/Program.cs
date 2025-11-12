@@ -98,7 +98,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactDev", policy =>
+        policy.WithOrigins("http://localhost:5173") // CRA dev server
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+    );
+});
+
 var app = builder.Build();
+
+app.UseCors("AllowReactDev");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

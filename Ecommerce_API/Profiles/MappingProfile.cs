@@ -39,6 +39,7 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.PaymentStatus, opt => opt.MapFrom(src => src.PaymentStatus.ToString()))
             .ForMember(dest => dest.OrderStatus, opt => opt.MapFrom(src => src.OrderStatus.ToString()))
             .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => src.PaymentMethod.ToString()))
+            .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address))
             .ReverseMap();
 
         // Create Order DTO → Order Entity

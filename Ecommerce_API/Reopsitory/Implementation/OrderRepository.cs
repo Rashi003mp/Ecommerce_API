@@ -56,8 +56,10 @@ namespace Ecommerce_API.Reopsitory.Implementation
         {
             return await _context.Orders
                 .Where(o => o.UserId == userId)
+                .Include(o => o.Address)
                 .Include(o => o.Items)
                     .ThenInclude(oi => oi.Product)
+                    .ThenInclude(oi => oi.Images)
                 .OrderByDescending(o => o.CreatedOn)
                 .ToListAsync();
         }

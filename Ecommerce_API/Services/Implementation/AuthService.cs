@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Ecommerce_API.Services.Implementation
@@ -50,7 +51,7 @@ namespace Ecommerce_API.Services.Implementation
                     Name = registerDto.Name,
                     Email = registerDto.Email,
                     PasswordHash = passwordHash,
-                    Role = Roles.user,     
+                    Role = Roles.admin,     
                     CreatedOn = DateTime.UtcNow,
                     CreatedBy = "system"
                 };
@@ -111,7 +112,8 @@ namespace Ecommerce_API.Services.Implementation
             {
                 new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Email, user.Email),
-                new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Role, user.Role.ToString())
+                new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Role, user.Role.ToString()),
+                new Claim(ClaimTypes.Name, user.Name.ToString())
             };
 
             var token = new System.IdentityModel.Tokens.Jwt.JwtSecurityToken(
