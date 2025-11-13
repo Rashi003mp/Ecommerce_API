@@ -39,7 +39,8 @@ namespace Ecommerce_API.Services.Implementation
         public async Task<ApiResponse<string>> ToggleWishlistasync(int userId, int productId)
         {
             var existing = await _Context.Wishlists
-                .FirstOrDefaultAsync(w => w.UserId == userId && w.ProductId == productId && !w.Product.IsActive);
+            .FirstOrDefaultAsync(w => w.UserId == userId && w.ProductId == productId);
+
 
             if (existing != null)
             {

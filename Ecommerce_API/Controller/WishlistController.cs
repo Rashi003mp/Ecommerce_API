@@ -30,7 +30,7 @@ namespace Ecommerce_API.Controllers
             return int.Parse(claim.Value);
         }
 
-        [Authorize(Policy = "Customer")]
+        [Authorize(Policy = "user")]
         [HttpGet]
         public async Task<IActionResult> GetWishlist()
         {
@@ -39,7 +39,7 @@ namespace Ecommerce_API.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [Authorize(Policy = "Customer")]
+        [Authorize(Policy = "user")]
         [HttpPost("{productId}")]
         public async Task<IActionResult> ToggleWishlist(int productId)
         {
